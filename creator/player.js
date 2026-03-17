@@ -24,7 +24,7 @@ var players = {
             
             if (/youtube\.com\/.*?(?:list=)(\w+)/.test(src)) { /* Playlist */
                 playerVars.listType = "playlist"
-                playerVars.list = src.match(/youtube\.com\/.*?(?:list=)(\w+)/).pop();
+                playerVars.list = src.match(/youtube\.com\/.*?(?:list=)([\w-]+)/).pop();
                 src = '';
             } else {
                 videoId = src.match(/youtu(be|.be)?(\.com)?\/(?:watch\?v=)?([a-zA-Z0-9_-]+)/);
