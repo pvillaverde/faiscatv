@@ -226,7 +226,7 @@ var rtv = {
                $.ajax({
                   dataType: "json",
                   url: list,
-                  beforeSend: function (jqXHR) { jqXHR.overrideMimeType('text/html;charset=iso-8859-1'); },
+                  beforeSend: function (jqXHR) { jqXHR.overrideMimeType('text/html;charset=utf-8'); },
                   success: function (data) {
                      var playlist = (data.playlist) ? data : JSON.parse(data.responseText);
                      rtv.player.cached_playlists[store] = that.generateStore(store, playlist);
