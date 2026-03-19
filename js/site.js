@@ -1,12 +1,13 @@
+moment.locale('gl');
 var rtv = {
    offset: 0, //Global sync offset. Tempted to make per-player offsets.
    preinit: async function () {
       var that = this;
       var container = $("<div />", { id: 'container' });
       var playerOff = $("<div />", { id: 'player-off' });
-      var playerOffMessage = $("<div />", { id: 'player-off-message' }).text("Turned Off");;
+      var playerOffMessage = $("<div />", { id: 'player-off-message' }).text("Apagado");;
       var orientationWarning = $("<div />", { id: 'orientation-warning' });
-      var orientationWarningMessage = $("<div />", { id: 'orientation-warning-message' }).text("Put device in landscape mode");;
+      var orientationWarningMessage = $("<div />", { id: 'orientation-warning-message' }).text("Pon o dispositivo en modo horizontal/apaisado");;
 
       $("body").append(container);
       container.append(this.menu.spawn());
@@ -28,8 +29,8 @@ var rtv = {
       this.init();
    },
    about: function () {
-      var about = '<div title="About RTV">' +
-         '<a href="https://github.com/ZapperDJ/rtv/" target="_blank">GitHub Repository</a> (submit bugs/requests here)' +
+      var about = '<div title="Sobre faísca TV">' +
+         '<a href="https://github.com/pvillaverde/faiscatv/" target="_blank">Repositorio GitHub</a> - Baseado na versión de <a href="https://github.com/ZapperDJ/rtv/" target="_blank">RTV de ZapperDJ</a>' +
          '<br><br>Made with jQuery, jQuery UI, Font Awesome, Moment.js, and seedrandom.js (if available)</div>';
 
       $(about).dialog({
@@ -38,7 +39,7 @@ var rtv = {
          width: "auto",
          modal: true,
          buttons: {
-            "Clear Local Storage": function () { localStorage.clear(); location.reload(); },
+            "Borrar almacenamento local e refrescar canles": function () { localStorage.clear(); location.reload(); },
          },
          open: function (event, ui) {
             $(this).parent().find('.ui-dialog-title').prepend("<img src='favicon.png' style='display:inline-block'/> ");
@@ -272,7 +273,7 @@ var rtv = {
             //Chat
             //channelName = store.replace(/(^playlists\/|(\.min)?\.json$)/g, "").split("/").pop().replace(/[\W]/g, "-"),
             var channelLen = 50,
-               channelName = "rtv" + (loops % 9999) + rtv.player.findNeedle(playlist).substring(0, channelLen),
+               channelName = "faiscatv" + (loops % 9999) + rtv.player.findNeedle(playlist).substring(0, channelLen),
                nick = "&nick=Kappa....",
                channels = "&channels=" + channelName,
                config = "&prompt=1&uio=MTY9dHJ1ZSYzPWZhbHNlJjk9dHJ1ZSYxMD10cnVlJjExPTIxNSYxMz1mYWxzZSYxND1mYWxzZQ9e";
@@ -329,7 +330,7 @@ var rtv = {
                var playlist = this.cache.playlist;
                var select = $("<select />", { class: "guide" });
                var time = moment().subtract(this.getCurrentVideo().seek_to, 'seconds');
-               var timeFormat = 'MM/DD hh:mmA'; //Moment.js time format
+               var timeFormat = 'MM/DD HH:mm'; //Moment.js time format
 
                $.each(playlist, function (i, item) {
                   if (i >= index) {
@@ -409,7 +410,7 @@ var rtv = {
          rtv.player.players.push(player);
 
          if (playlist.info.hasOwnProperty("name")) {
-            document.title = `RTV | ${playlist.info.name}`
+            document.title = `Faísca TV | ${playlist.info.name}`
          }
 
          //TO-DO: Make configurable
@@ -744,21 +745,21 @@ var rtv = {
          }).appendTo(currentColumn);
 
          // Volume up
-         $("<i />", { class: "control-button fa fa-plus", title: "Volume up" }).click(function () {
+         $("<i />", { class: "control-button fa fa-plus", title: "Subir volume" }).click(function () {
             $("[id^=window-player]").each(function () {
                rtv.player.players[$(this).data()["player-index"]].instance.setVolume(rtv.player.players[$(this).data()["player-index"]].instance.getVolume() + 5);
             });
          }).appendTo(currentColumn);
 
          // Volume down
-         $("<i />", { class: "control-button fa fa-minus", title: "Volume down" }).click(function () {
+         $("<i />", { class: "control-button fa fa-minus", title: "Baixar volume" }).click(function () {
             $("[id^=window-player]").each(function () {
                rtv.player.players[$(this).data()["player-index"]].instance.setVolume(rtv.player.players[$(this).data()["player-index"]].instance.getVolume() - 5);
             });
          }).appendTo(currentColumn);
 
          // Chat
-         $("<i />", { class: "control-button fa fa-comments", title: "Toggle chat" }).click(function () {
+         $("<i />", { class: "control-button fa fa-comments", title: "Alternar chat" }).click(function () {
             $("#chat").toggleClass("closed")
             $("#chat iframe").prop("src", function () { return $(this).data("src") })
          }).appendTo(currentColumn);
@@ -771,10 +772,10 @@ var rtv = {
          var currentColumn = menuColumn2;
 
          // Guide
-         $("<i />", { class: "control-button fa fa-th-list", title: "Open RTV Guide" }).click(function () { rtv.guide.open(); }).appendTo(menuColumn2);
+         $("<i />", { class: "control-button fa fa-th-list", title: "Abrir Programación Faísca TV" }).click(function () { rtv.guide.open(); }).appendTo(menuColumn2);
 
          // Mute
-         $("<i />", { class: "control-button fa fa-volume-xmark button-active", title: "Unmute" }).click(function () {
+         $("<i />", { class: "control-button fa fa-volume-xmark button-active", title: "Activar son" }).click(function () {
             $("[id^=window-player]").each(function () {
                if (rtv.config.muted) {
                   rtv.player.players[$(this).data()["player-index"]].instance.unMute();
@@ -790,7 +791,7 @@ var rtv = {
          }).appendTo(currentColumn);
 
          // Subtitles
-         $("<i />", { class: "control-button fa fa-closed-captioning", title: "Subtitles" }).click(function () {
+         $("<i />", { class: "control-button fa fa-closed-captioning", title: "Subtítulos" }).click(function () {
             $("[id^=window-player]").each(function () {
                if (rtv.config.subtitles) {
                   rtv.player.players[$(this).data()["player-index"]].instance.unloadModule('captions');
@@ -805,7 +806,7 @@ var rtv = {
          }).appendTo(currentColumn);
 
          // Open in YouTube
-         $("<i />", { class: "control-button fa fa-up-right-from-square", title: "Open in YouTube" }).click(function () {
+         $("<i />", { class: "control-button fa fa-up-right-from-square", title: "Abrir en YouTube" }).click(function () {
             $("[id^=window-player]").each(function () {
                window.open(rtv.player.players[$(this).data()["player-index"]].instance.getVideoUrl(), '_blank').focus();
             });
@@ -816,7 +817,7 @@ var rtv = {
          var currentColumn = menuColumn3;
 
          // Full screen
-         $("<i />", { class: "control-button fa fa-expand", title: "Toggle Fullscreen" }).click(function () {
+         $("<i />", { class: "control-button fa fa-expand", title: "Alternar pantalla completa" }).click(function () {
             if (document.fullscreenElement == null) {
                $("body")[0].requestFullscreen()
             } else {
@@ -826,16 +827,16 @@ var rtv = {
          }).appendTo(currentColumn);
 
          // Channel up
-         $("<i />", { class: "control-button fa fa-chevron-up", title: "Channel up" }).click(function () { rtv.menu.channelUp(); }).appendTo(currentColumn);
+         $("<i />", { class: "control-button fa fa-chevron-up", title: "Canle seguinte" }).click(function () { rtv.menu.channelUp(); }).appendTo(currentColumn);
 
          // Channel down
-         $("<i />", { class: "control-button fa fa-chevron-down", title: "Channel down" }).click(function () { rtv.menu.channelDown(); }).appendTo(currentColumn);
+         $("<i />", { class: "control-button fa fa-chevron-down", title: "Canle anterior" }).click(function () { rtv.menu.channelDown(); }).appendTo(currentColumn);
 
          // Sleep timer
-         $("<i />", { class: "control-button fa fa-bed", title: "Sleep Timer" }).click(() => this.sleep.dialog()).appendTo(currentColumn);
+         $("<i />", { class: "control-button fa fa-bed", title: "Temporizador de apagado" }).click(() => this.sleep.dialog()).appendTo(currentColumn);
 
          // Hide controls
-         $("<i />", { class: "fa fa-down-left-and-up-right-to-center", title: "Hide controls" }).click(function () {
+         $("<i />", { class: "fa fa-down-left-and-up-right-to-center", title: "Agochar controis" }).click(function () {
             $(".control-button").each(function () { $(this).toggleClass("no-display"); });
             $(this).toggleClass("fa-up-right-and-down-left-from-center fa-down-left-and-up-right-to-center");
             $("#menu").toggleClass("fade-in fade-out");
@@ -893,7 +894,7 @@ var rtv = {
          last: 1,
          dialog: function () {
             var that = this;
-            var about = `<div title="Sleep Timer" style="text-align:center"></div>`
+            var about = `<div title="Temporizador de apagado" style="text-align:center"></div>`
 
             $(this.contents()).dialog({
                id: "sleepDialog",
@@ -902,10 +903,10 @@ var rtv = {
                width: "auto",
                modal: true,
                buttons: {
-                  "Apply": function () {
+                  "Aplicar": function () {
                      that.last = (parseFloat($("input.sleep")[0].value) || 0)
                      var value = that.last * 3600000
-                     that.end = moment().add(value).format('hh:mmA')
+                     that.end = moment().add(value).format('HH:mm')
 
                      clearTimeout(that.timer)
                      that.timer = 0
@@ -933,9 +934,9 @@ var rtv = {
             $(about).find("button").button();
          },
          contents: function () {
-            var status = (this.timer == 0) ? "Sleep timer disabled." : `Sleep timer set for ${this.end}`
-            var content = `<div title="Sleep Timer" style="text-align:center">
-                        Enter a duration in hours to automatically stop playback.<br>Set to 0 to disable.<br><br>
+            var status = (this.timer == 0) ? "Temporizador de apagado deshabilitado." : `Temporizador de apagado posto para as <b>${this.end}</b>`
+            var content = `<div title="Temporizador de apagado" style="text-align:center">
+                        Indica a duración en horas para parar a reprodución automaticamente.<br>Pon 0 para deshabilitalo.<br><br>
                         <input type="number" class="sleep" name="" min="0" step="0.5" value="${this.last}" style="text-align:center"><br>
                         <br>
                         ${status}
@@ -945,7 +946,7 @@ var rtv = {
          }
       },
       share: function () {
-         return $("<i />", { class: "control-button fa fa-share-nodes", title: "Share this channel" }).click(function () {
+         return $("<i />", { class: "control-button fa fa-share-nodes", title: "Compartir esta canle" }).click(function () {
             var item = rtv.player.players[$("[id^=window-player]").eq(0).data()["player-index"]].cache;
 
             if (/^custom\d+$/.test(item.info.url)) {
@@ -957,11 +958,11 @@ var rtv = {
                   delete p.playlist[i].index;
                }
                var href = location.href.split("#")[0] + "#?custom";
-               var shurl = $("<a>", { target: "_blank", href: href, text: (href || "Share this URL") });
+               var shurl = $("<a>", { target: "_blank", href: href, text: (href || "Comparte esta URL") });
 
-               var t = $("<div title='Share " + item.info.name + "' />")
-                  .append("<p style='text-align:left'>This custom channel is not hosted on this site and must be manually shared.<br><br>" +
-                     "<strong>Step 1:</strong> Share " + shurl[0].outerHTML + " <br><strong>Step 2:</strong> Share the custom channel contents, below:</p>"
+               var t = $("<div title='Compartir " + item.info.name + "' />")
+                  .append("<p style='text-align:left'>Esta canle personalizada non está aloxada neste sitio e debe ser compartida manualmente.<br><br>" +
+                     "<strong>Paso 1:</strong> Compartir " + shurl[0].outerHTML + " <br><strong>Paso 2:</strong> Compartir o contido da canle personalizada, aqui debaixo:</p>"
                   )
                   .append($("<textarea>", { id: "shareCustom", text: JSON.stringify(p), readonly: "readonly" }).focus(function () { $(this).select(); }));
 
@@ -988,9 +989,9 @@ var rtv = {
                //href += (href.substr(-1)=='#'?'':'#')+needle;
                //<a target='_blank' href='"+href+"'>"+href+"</a>
                var input = $("<input readonly value='" + href + "' />").focus(function () { $(this).select(); });
-               var t = $("<div title='Share " + item.info.name + "' />").append(input);
-               var msg = escape("Let's watch " + item.info.name + " together! " + href);
-               $(t).append("<a target='_blank' href='http://twitter.com/home?status=" + msg + "'><i class='fa fa-twitter'></i> Tweet</a>")
+               var t = $("<div title='Compartir " + item.info.name + "' />").append(input);
+               var msg = escape("Vexamos " + item.info.name + " xuntos! " + href);
+               $(t).append("<a target='_blank' href='https://share.joinmastodon.org/#text=" + msg + "'><i class='fa-brands fa-mastodon'></i> Mastodon</a>")
 
                $(t).dialog({
                   autoOpen: true,
@@ -1041,7 +1042,7 @@ var rtv = {
       channels: {
          open: function () {
             var that = this;
-            var test = "<div id='customizeChannels' title='Select RTV Channels'><form>" + this.generateTable()[0].outerHTML + "</form></div>";
+            var test = "<div id='customizeChannels' title='Seleccionar canles Faísca TV'><form>" + this.generateTable()[0].outerHTML + "</form></div>";
 
             var channelDialog = $(test).dialog({
                autoOpen: true,
@@ -1051,29 +1052,29 @@ var rtv = {
                dialogClass: 'dialog-customizePlaylists',
                buttons: {
                   "test": {
-                     text: "Custom Channels",
+                     text: "Canles personalizadas",
                      "class": "customPlaylists",
                      click: function () { that.custom.open() }
                   },
                   "custrepo": {
-                     text: "Channel Repositories",
+                     text: "Repositorios de canles",
                      "class": "customPlaylists",
                      click: function () {
                         // TO-DO: Dialog
-                        var repos = prompt('Comma-separated list of repo URLs:', rtv.config.cache.repos)
+                        var repos = prompt('Lista separada por comas de URL de canles:', rtv.config.cache.repos)
                         rtv.config.cache.repos = repos.split(",");
 
                         rtv.config.save();
                         location.reload();
                      }
                   },
-                  "Save": save,
-                  Cancel: function () {
+                  "Gardar": save,
+                  "Cancelar": function () {
                      channelDialog.dialog("close");
                   }
                },
                close: function () {
-                  //$("<div title='Select RTV Channels'><p>Please reload RTV to reflect any changes.</p></div>").dialog({modal: true, width: "auto"});
+                  //$("<div title='Seleccionar canles Faísca TV'><p>Please reload RTV to reflect any changes.</p></div>").dialog({modal: true, width: "auto"});
                }
             })
 
@@ -1093,20 +1094,20 @@ var rtv = {
                   var lastGone = "";
                   if ($.inArray(localStorage.rtvLastPlaylist, yours) == -1) {
                      localStorage.removeItem("rtvLastPlaylist");
-                     lastGone = "<hr><p><strong>Note:</strong> Your last viewed channel is not in <strong>Your Channels</strong> and has been reset.<br>Upon reload, a random channel will be selected.</p>";
+                     lastGone = "<hr><p><strong>Nota:</strong> A última canle que viches non está en <strong>As túas canles</strong> e foi reiniciada.<br>Despois dun refresco, seleccionarase unha canle aleatoria.</p>";
                   }
 
-                  var msg = "<div title='Select RTV Channels - Saved'><p><strong>Your Channels</strong> has been saved, please reload RTV to reflect any changes.</p>" + lastGone + "</div>"
+                  var msg = "<div title='Seleccionar canles Faísca TV - Gardadas'><p><strong>As túas canles</strong> foron gardadas, por favor recarga Faísca TV para ver os cambios.</p>" + lastGone + "</div>"
                   var saveDialog = $(msg).dialog({
                      modal: true,
                      width: "auto",
                      buttons: {
-                        "Reload now": function () { location.reload(); },
+                        "Recargar agora": function () { location.reload(); },
                         Cancel: function () { saveDialog.dialog("close"); }
                      }
                   });
                } else {
-                  $("<div title='Select RTV Channels - Error'><p><strong>Your Channels</strong> must have at least one channel.</p></div>").dialog({ modal: true, width: "auto" });
+                  $("<div title='Seleccionar canles Faísca TV - Error'><p><strong>As túas canles</strong> deben ter polo menos unha canle.</p></div>").dialog({ modal: true, width: "auto" });
                }
             }
 
@@ -1140,10 +1141,10 @@ var rtv = {
          cleanupRegex: /(^playlists\/|(\.(min|json))+$)/ig,
          generateTable: function () {
             //Wake me up.
-            var out = $("<div />").append("<p>Channels under <strong>Your Channels</strong> will be displayed in the guide.<br><strong>Custom Channels</strong> are modified by clicking the button below.</p>");
+            var out = $("<div />").append("<p>As canles baixo <strong>As túas canles</strong> amosaránse na programación.<br><strong>As canles personalizadas</strong> modificanse facendo clic no botón inferior.</p>");
 
             var table = $("<table />", { id: "customizeChannels", class: "customizeChannels", style: "background-color:white" });
-            table.append("<tr class='header'><td>Available Channels</td><td>Your Channels</td></tr>");
+            table.append("<tr class='header'><td>Canles dispoñibles Channels</td><td>As túas canles</td></tr>");
 
             //Generate Your Channels first
             var yourChannels = $("<select />", { id: 'chanYours', 'multiple': true, size: 6 });
@@ -1155,7 +1156,7 @@ var rtv = {
             var availChannels = this.availChannels();
             table.append("<tr><td>" + availChannels[0].outerHTML + "</td><td>" + yourChannels[0].outerHTML + "</td></tr>");
             //Generate buttons
-            table.append("<tr><td style='text-align:right'><button id='availMoveAll'>All &gt;</button><button id='availMoveSel'>Selected &gt;</button></td><td style='text-align:left'><button id='yoursMoveSel'>&lt; Selected</button><button id='yoursMoveAll'>&lt; All</button></td></tr>");
+            table.append("<tr><td style='text-align:right'><button id='availMoveAll'>Todas &gt;</button><button id='availMoveSel'>Seleccionadas &gt;</button></td><td style='text-align:left'><button id='yoursMoveSel'>&lt; Seleccionadas</button><button id='yoursMoveAll'>&lt; Todas</button></td></tr>");
             table.append("</table>");
 
             //Generate output
@@ -1178,8 +1179,8 @@ var rtv = {
          custom: {
             open: function (share) {
                var that = this;
-               var body = (!share) ? "Enter each custom channel in its own text box." : "Did someone share a custom channel with you?<br>Please paste it below and click \"Save\" to use it.";
-               var manager = "<div title='Custom Channels'><p>" + body + "</p>" + this.load() + "</div>"
+               var body = (!share) ? "Introducir cada canle personalizada na súa caixa de texto." : "Alguén compartiu unha canle personalizada contigo?<br>Introdúcea aqui debaixo e fai click en \"Gardar\" para usala.";
+               var manager = "<div title='Canles personalizadas'><p>" + body + "</p>" + this.load() + "</div>"
 
                var managerDialog = $(manager).dialog({
                   autoOpen: true,
@@ -1187,13 +1188,13 @@ var rtv = {
                   width: "auto",
                   modal: true,
                   buttons: {
-                     "Help": function () { window.open('https://github.com/myrtv/myrtv.github.io/wiki/Custom-Channels', '_blank'); },
+                     "Axuda (en Inglés)": function () { window.open('https://github.com/myrtv/myrtv.github.io/wiki/Custom-Channels', '_blank'); },
                      "upload": {
-                        text: "Open",
+                        text: "Abrir ficheiro",
                         click: function () { that.upload() }
                      },
-                     "Save": function () { that.save(share) },
-                     Cancel: function () { managerDialog.dialog("close"); }
+                     "Gardar": function () { that.save(share) },
+                     "Cancelar": function () { managerDialog.dialog("close"); }
                   }
                }).attr("id", "customPlaylistsManager");
             },
@@ -1225,11 +1226,11 @@ var rtv = {
                      $("#customPlaylistsManager").dialog("close");
                   }
                } else {
-                  var dlg = $("<div title='Custom Channels - Saved'><p><strong>Custom Channels</strong> has been saved, please reload RTV to reflect any changes.</p></div>").dialog({
+                  var dlg = $("<div title='Canles personalizadas - Gardadas'><p>Gardáronse as <strong>Canles personalizadas</strong>, por favor recarga Faísca TV para ver os cambios.</p></div>").dialog({
                      modal: true,
                      width: "auto",
                      buttons: {
-                        "Reload now": function () { location.reload(); },
+                        "Recargar agora": function () { location.reload(); },
                         Cancel: function () { dlg.dialog("close"); }
                      }
                   });
@@ -1241,20 +1242,20 @@ var rtv = {
                   if (a.info && a.info.name && a.playlist.length > 0) {
                      return true
                   } else {
-                     rtv.guide.channels.custom.edialog(i, "No info.name or empty playlist.", "Ensure it was entered correctly.");
+                     rtv.guide.channels.custom.edialog(i, "Non hai información ou playlist baleira.", "Asegúrate de introducilo correctamente.");
                      return false
                   }
                } catch (e) {
-                  rtv.guide.channels.custom.edialog(i, e, "Ensure it was entered correctly.");
+                  rtv.guide.channels.custom.edialog(i, e, "Asegúrate de introducilo correctamente.");
                   return false
                }
             },
             edialog: function (i, error, follow) {
-               $('<div title="Issue parsing input #' + (i + 1) + '"><p class="depress">' + error + '</p>' + follow + '</div>').dialog({ width: "auto", modal: 1 })
+               $('<div title="Houbo un problema parseando #' + (i + 1) + '"><p class="depress">' + error + '</p>' + follow + '</div>').dialog({ width: "auto", modal: 1 })
             },
             genInput: function (line) {
                return $('<input />', {
-                  placeholder: "Paste playlist here...",
+                  placeholder: "Pega a playlist aquí...",
                   style: "width:100%",
                   value: line
                })[0].outerHTML;
@@ -1346,16 +1347,16 @@ var rtv = {
       generateHead: function () {
          var head = $("<div />", { class: "guideHead" });
          $.each([
-            ["Close RTV Guide", function () { rtv.guide.close(); }],
+            ["Pechar Programación Faísca TV", function () { rtv.guide.close(); }],
             // ["Resync Player", function() {$("[id^=window-player]").each(function() {rtv.player.players[$(this).data()["player-index"]].resync();});}],
-            ["Select Channels", function () { rtv.guide.channels.open(); }],
-            ["About RTV", function () { rtv.about(); }]
+            ["Seleccionar canles", function () { rtv.guide.channels.open(); }],
+            ["Sobre Faísca TV", function () { rtv.about(); }]
          ], function (i, v) {
             $("<span />", { class: "pointer", text: v[0] }).on('click', v[1]).appendTo(head);
          });
 
          if (0 && Notification.permission !== "granted") {
-            $("<span />", { id: "enableSubs", class: "pointer", text: "(Enable Subscriptions)" }).one('click', function () {
+            $("<span />", { id: "enableSubs", class: "pointer", text: "(Permitir suscricións)" }).one('click', function () {
                //rtv.notifications.init();
                $("#enableSubs").remove();
             }).appendTo(head);
@@ -1431,10 +1432,10 @@ var rtv = {
                class: "show" + endClass + startClass,
                text: item.name,
                title: item.name +
-                  "\nDuration: " + moment.utc(item.duration * 1000).format("H:mm:ss") +
-                  "\n" + ((moment().toDate() > startingTime.toDate()) ? "Started " : "Starts ") + moment().to(startingTime) +
-                  "\nStart: " + startingTime.format("LLLL") +
-                  "\nStop: " + startingTime.add(item.duration, 'seconds').format("LLLL")
+                  "\n<b>Duración</b>: " + moment.utc(item.duration * 1000).format("H:mm:ss") +
+                  "\n" + ((moment().toDate() > startingTime.toDate()) ? "Comezou " : "Comeza ") + moment().to(startingTime) +
+                  "\n<b>Comezo:</b> " + startingTime.format("LLLL") +
+                  "\n<b>Fin</b>: " + startingTime.add(item.duration, 'seconds').format("LLLL")
             })
                .css({ "width": width, "maxWidth": width })
                .appendTo(row);
